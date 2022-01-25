@@ -1,0 +1,54 @@
+{% extends 'includes/navbar.html' %}
+{% block content %}
+<div class="app-wrapper">
+	    
+    <div class="app-content pt-3 p-md-3 p-lg-4">
+        <div class="container-xl">
+<div class="col-sm-8 col-lg-9 container ">
+    <h3 class="text-center mt-5">Add Project</h3>
+   
+    <div class="row m-5 p-3 border bg-white">
+        <table class="table ">
+            <tr>
+                <th>Project Name</th>
+                <th>Total Partnership</th>
+            </tr>
+            {% for pages in page %}
+            <tr>
+                <td>{{pages.name}}</td>
+
+                <td>
+                    {% for partnership in pages.partnership_set.all %}
+                    {{partnership.partnership}}
+                    {% endfor%}
+                </td> 
+            </tr>
+            {% endfor %}
+        </table>
+       
+    </div>
+    <div class="row mt-5">
+                <center>
+                   
+                {% if page.has_previous %}
+                <a href="?page={{page.previous_page_number}}" class="m-3" >Previous &nbsp; &nbsp; |</a>
+                {% endif %}
+                <span class="m-3">{{page.number}} &nbsp;&nbsp;  |</span>
+                {% if page.has_next %}
+                <a href="?page={{page.next_page_number}}" class="m-3" >Next</a>
+                {% endif %}
+                   
+                </center>
+                
+                
+          
+    </div>
+
+
+    
+
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

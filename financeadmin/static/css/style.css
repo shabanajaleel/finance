@@ -1,0 +1,40 @@
+/* .setnav{
+    height:100px
+}
+.setbrand{
+    font-size: 34px;
+    font-weight: 600;
+}
+.setsize{
+    font-size: 20px; 
+}
+.setsidebar{
+    height:100vh;
+}
+.button{
+    background-color: transparent;
+    color:white
+}
+.button:hover {
+    background-color: rgb(163, 162, 162);
+    color:white 
+}
+.dropdown-button{
+    background-color: transparent;
+    margin-left: 50px;
+
+}
+.rowset{
+    margin-top:35%;
+}
+.profit-button{
+    margin-top: 20px;
+} */
+.app_logo{
+    text-decoration: none;
+    font-size: 32px;
+    color:green
+}
+.nav-link-text{
+    font-size: 34 px;
+}
