@@ -1,6 +1,7 @@
 from django import forms
 from . models import profit, project,partner,partnership
 
+
 class projectform(forms.ModelForm):
     class Meta:
         model=project
@@ -47,7 +48,7 @@ class profitform(forms.ModelForm):
             'amount':'Profit Amount(in Rs)'
         }
         widgets={
-            'created_date':forms.DateInput(attrs={'class':"form-control"}),
+            'created_date':forms.DateTimeInput(attrs={'class':"form-control"}),
             'project':forms.Select(attrs={'class':"form-control"}),
             'amount':forms.NumberInput(attrs={'class':"form-control"})
         }

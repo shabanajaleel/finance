@@ -5,6 +5,7 @@ from .forms import partnerform, partnershipform, projectform,profitform
 from . models import partner, partnership, project,profit
 from django.core.paginator import Paginator
 from django.db.models import Sum
+from django.db.models import Q
 
 # Create your views here.
 def fnlogin(request):
@@ -41,7 +42,8 @@ def fnaddproject(request):
 def fnviewproject(request):
     projects=project.objects.all()
     # for i in projects:
-    #     sum1=partnership.objects.filter(project=i.id).aggregate(mysum=Sum('partnership'))['mysum'] or 0.00
+    #     sum1=partnership.objects.filter(project=i.id).aggregate(mysum=Sum('partnership'))['mysum'] or 0.00\
+    
     print(projects)
     paginator=Paginator(projects,3)
     page_num=request.GET.get('page')
@@ -66,7 +68,7 @@ def fnaddpartner(request):
             if part_obj==True:
                 p=partner.objects.get(partner_name=partnername)
                 if form2.is_valid():                              
-                    proj_obj=partnership.objects.filter(project=projectid).exists()
+                    proj_obj=partnership.objects.filter(project=projectid,partner=p.id).exists()
                     if proj_obj==False:
                         sum1=partnership.objects.filter(project=projectid).aggregate(mysum=Sum('partnership'))['mysum'] or 0.00
                         sum2=100-sum1
@@ -103,7 +105,30 @@ def fnaddpartner(request):
 
 def fnaddprofit(request):
     form=profitform
+    if request.method=="POST":
+        form=profitform(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'profit added successfully')
+            return redirect(fnaddprofit)
+        else:
+            messages.error(request,'invalid entries')
+            return redirect(fnaddprofit)
+
     context={'form':form}
     return render(request,'addprofit.html',context)
+
+def fnviewprofit(request):
+    profits=profit.objects.all()
+    context={'profits':profits}
+    return render(request,'viewprofit.html',context)
+
+def fnviewpartner(request):
+    q=request.GET.get('q') if request.GET.get('q') !=None  else ''
+    t=request.GET.get('t') if request.GET.get('t') !=None  else ''
+    print(q)
+    partners=partner.objects.filter(partner_name__icontains=q)
+    context={'partner':partners}
+    return render(request,'viewpartners.html',context)
 
 

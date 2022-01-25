@@ -1,0 +1,56 @@
+{% extends 'includes/navbar.html' %}
+{% block content %}
+{% load mathfilters %}
+<div class="app-wrapper">
+	    
+    <div class="app-content pt-3 p-md-3 p-lg-4">
+        <div class="container-xl">
+<div class="col-sm-8 col-lg-9 container ">
+    <h3 class="text-center mt-5">View Partners</h3>
+    <div class="row m-5 p-3 border bg-white">
+        <form action="" method="GET">
+            <div class="row">
+                 <div class="col-sm-6 my-2">
+                <input type="text" placeholder="Search by Partner Name" class="form-control" name="q">
+            </div>
+            <div class="col-sm-6 my-2">
+                <input type="text" placeholder="Search by Project Name" class="form-control" name="t">
+            </div>
+        </div>
+       
+        <center><button type="submit" class="btn btn-secondary mt-5">Search</button></center>
+    </form>
+
+    </div>
+   
+    <div class="row m-5 p-3 border bg-white">
+        <table class="table ">
+            <tr>
+                <th>Name</th>
+                <th>Projects</th>
+                <th></th>
+            </tr>
+            {% for partners in partner %} 
+            <tr>
+                <td>{{partners.partner_name}}</td>
+                <td>{% for p in partners.partnership_set.all %}
+                    {{p.project}}
+                    {% endfor%}
+                </td>
+                <td><a href="" class="btn btn-secondary"> Edit</a></td>
+            </tr>
+            {% endfor %}
+           
+        </table>
+       
+    </div>
+  
+
+
+    
+
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

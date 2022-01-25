@@ -9,6 +9,7 @@ class project(models.Model):
 
 class partner(models.Model):
     partner_name=models.CharField(max_length=30)
+    
 
     def __str__(self):
         return self.partner_name

@@ -1,35 +1,32 @@
 {% extends 'includes/navbar.html' %}
 {% block content %}
-{% load custom_templates %}
+{% load mathfilters %}
 <div class="app-wrapper">
 	    
     <div class="app-content pt-3 p-md-3 p-lg-4">
         <div class="container-xl">
 <div class="col-sm-8 col-lg-9 container ">
-    <h3 class="text-center mt-5">Add Project</h3>
+    <h3 class="text-center mt-5">View Profit</h3>
    
     <div class="row m-5 p-3 border bg-white">
         <table class="table ">
             <tr>
-                <th>Project Name</th>
-                <th>Total Partnership</th>
+                <th>Date</th>
+                <th>Project</th>
+                <th>Amount</th>
             </tr>
-            {% for pages in page %}
+            {% for profit in profits %} 
             <tr>
-                <td>{{pages.name}}</td>
-                
-                <td>
-                    {% for i in pages.partnership_set.all %}
-                    <!-- {{partnership.partnership}} -->
-                    {{ sumproject|i.partnership }}
-                    {% endfor%}
-                </td> 
+                <td>{{profit.created_date}}</td>
+                <td>{{profit.project}}</td>
+                <td>{{profit.amount}}Rs</td>
             </tr>
             {% endfor %}
+           
         </table>
        
     </div>
-    <div class="row mt-5">
+    <!-- <div class="row mt-5">
                 <center>
                    
                 {% if page.has_previous %}
@@ -44,7 +41,7 @@
                 
                 
           
-    </div>
+    </div> -->
 
 
     
