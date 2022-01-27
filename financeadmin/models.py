@@ -8,7 +8,7 @@ class project(models.Model):
         return self.name
 
 class partner(models.Model):
-    partner_name=models.CharField(max_length=30)
+    partner_name=models.CharField(max_length=30,unique=True)
     
 
     def __str__(self):
@@ -18,6 +18,9 @@ class partnership(models.Model):
     project=models.ForeignKey(project,on_delete=models.CASCADE)
     partner=models.ForeignKey(partner,on_delete=models.CASCADE,null=True)
     partnership=models.IntegerField()
+
+    class Meta:
+        unique_together=['project','partner']
 
     def __str__(self):
         return str(self.partner)

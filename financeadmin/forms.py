@@ -1,5 +1,9 @@
+from sqlite3 import Date
 from django import forms
 from . models import profit, project,partner,partnership
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
 
 class projectform(forms.ModelForm):
@@ -39,6 +43,7 @@ class partnershipform(forms.ModelForm):
         }
 
 class profitform(forms.ModelForm):
+   
     class Meta:
         model=profit
         fields="__all__"
@@ -48,9 +53,13 @@ class profitform(forms.ModelForm):
             'amount':'Profit Amount(in Rs)'
         }
         widgets={
-            'created_date':forms.DateTimeInput(attrs={'class':"form-control"}),
+            'created_date':DateInput(attrs={'class':"form-control"}),
             'project':forms.Select(attrs={'class':"form-control"}),
             'amount':forms.NumberInput(attrs={'class':"form-control"})
         }
+        # def __init__(self,*args,**kargs):
+        #     super(profitform,self).__init__(*args,**kargs)
+        #     for name in self.fields.keys():
+        #         self.fields[name].widget.attrs.update({'class':'form-control'})
 
         

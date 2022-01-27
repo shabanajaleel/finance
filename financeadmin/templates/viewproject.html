@@ -17,12 +17,24 @@
             {% for pages in page %}
             <tr>
                 <td>{{pages.name}}</td>
-                
                 <td>
-                    {% for i in pages.partnership_set.all %}
-                    <!-- {{partnership.partnership}} -->
-                    {{ sumproject|i.partnership }}
+                    {% for summations in sum_list%}
+                    {% if summations.name == pages.name%}
+                    {{summations.sum}} %
+                    {% endif%}
+                    
                     {% endfor%}
+                <!-- {% for j in pages.partnership_set.all %}
+               
+                    {{j.partnership}}
+               
+              
+                {% endfor %} -->
+            </td>
+                <td>
+                    
+                    
+                    
                 </td> 
             </tr>
             {% endfor %}

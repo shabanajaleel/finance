@@ -41,24 +41,31 @@ def fnaddproject(request):
 
 def fnviewproject(request):
     projects=project.objects.all()
-    # for i in projects:
-    #     sum1=partnership.objects.filter(project=i.id).aggregate(mysum=Sum('partnership'))['mysum'] or 0.00\
-    
-    print(projects)
+    sum_dict={}
+    sum_list=[]
+    for i in projects:
+        sum1=partnership.objects.filter(project=i.id).aggregate(mysum=Sum('partnership'))['mysum'] or 0.00
+        sum_dict['name']=i.name
+        sum_dict['sum']=sum1
+        sum_list.append(sum_dict.copy())
+        sum_dict={}
     paginator=Paginator(projects,3)
     page_num=request.GET.get('page')
     page_obj=paginator.get_page(page_num)
-    context={'page':page_obj}
+    context={'page':page_obj,'sum_list':sum_list}
     return render(request,"viewproject.html",context)
 
-def fnaddpartner(request):
+
+
+
+def fnaddpartner1(request):
+    project_model=project.objects.all()
     form1=partnerform()
     form2=partnershipform()
-    context={'form1':form1,'form2':form2}
+    context={'form1':form1,'form2':form2,'project_model':project_model}
     if request.method=="POST":
         form1=partnerform(request.POST)
         partnername=request.POST.get('partner_name')
-        form2=partnershipform(request.POST)
         projectid=request.POST.get('project')
         partnership1=int(request.POST.get('partnership'))
 
@@ -101,7 +108,7 @@ def fnaddpartner(request):
                     messages.error(request,'Partnership exceeds 100')
                     return redirect(fnaddpartner)
 
-    return render(request,'addpartner.html',context)
+    return render(request,'addpartnernew.html',context)
 
 def fnaddprofit(request):
     form=profitform
@@ -127,8 +134,77 @@ def fnviewpartner(request):
     q=request.GET.get('q') if request.GET.get('q') !=None  else ''
     t=request.GET.get('t') if request.GET.get('t') !=None  else ''
     print(q)
-    partners=partner.objects.filter(partner_name__icontains=q)
+    partners=partner.objects.all()
+    if q:
+        partners=partners.filter(partner_name__icontains=q)
+    if t:
+        partners=partners.filter(partnership__project__name=t)
     context={'partner':partners}
     return render(request,'viewpartners.html',context)
+
+
+def fnaddpartner(request):
+    project_model=project.objects.all()
+    form1=partnerform()
+    form2=partnershipform()
+    context={'form1':form1,'form2':form2,'project_model':project_model}
+    if request.method=="POST":
+        form1=partnerform(request.POST)
+        partnername=request.POST.get('partner_name')
+        check_list=request.POST.getlist('check')
+        newcheck_list=[i for i in check_list if i]
+        print(newcheck_list)
+        partnership_list=request.POST.getlist('partnership')
+        newpartneship_list=[j for j in partnership_list if j]
+        print(newpartneship_list)
+        if form1.is_valid():
+            p=form1.save()
+            
+            for z in range(0,len(newcheck_list)):
+                print(z)
+                print(newcheck_list[z])
+                print(newpartneship_list[z])
+                sum1=partnership.objects.filter(project=newcheck_list[z]).aggregate(mysum=Sum('partnership'))['mysum'] or 0.00
+                sum2=100-sum1
+                if int(newpartneship_list[z]) <= sum2: 
+                    newpart=partnership(project_id=newcheck_list[z],partner_id=p.id,partnership=newpartneship_list[z])
+                    newpart.save()
+                    messages.success(request,'partners added successfully')
+                    return redirect(fnaddpartner)
+                else:
+                    messages.error(request,'partnership exceeds 100')                    
+    return render(request,'addpartnernew.html',context)
+
+                            
+                        
+            
+            # if part_obj==True:
+            #     p=partner.objects.get(partner_name=partnername) 
+            #     for i in check_list:
+            #         if i != '':
+            #             proj_obj=partnership.objects.filter(project=i,partner=p.id).exists()
+            #             if proj_obj==False:
+            #                 sum1=partnership.objects.filter(project=i).aggregate(mysum=Sum('partnership'))['mysum'] or 0.00
+            #                 sum2=100-sum1
+            #                 for j in partnership_list:
+            #                     if int(j) <= sum2:
+            #                         newpart=partnership(project_id=i,partner_id=p.id,partnership=j)
+            #                         newpart.save()
+            #                         messages.success(request,'partners added successfully')
+            #                         return redirect(fnaddpartner)
+            #                     else:
+            #                         messages.error(request,'Partnership exceeds 100')
+            #                         return redirect(fnaddpartner)
+
+            #                 else:
+            #                     messages.error(request,'partner with selected project exists')
+            #                     return redirect(fnaddpartner)
+            #             else:
+                            
+                            
+                   
+
+    
+
 
 

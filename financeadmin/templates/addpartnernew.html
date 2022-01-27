@@ -1,0 +1,68 @@
+{% extends 'includes/navbar.html' %}
+{% block content %}
+
+<div class="app-wrapper">
+	    
+    <div class="app-content pt-3 p-md-3 p-lg-4">
+        <div class="container-xl">
+            <h3 class="text-center mt-5">Add Partner</h3>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="row m-5 p-3 border">
+                        <!-- for messages -->
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="row mt-2">
+
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                {{message}}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        <!-- end message  -->
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <div class="col-sm-12 my-2">
+                                {{form1.partner_name.label}}
+                            </div>
+                            <div class="col-sm-12 ">
+                            {{form1.partner_name}}
+                            </div>
+
+                            <div class="row mt-5 p-2  ">
+                                {% for projects in project_model %}
+                                <div class="col-sm-2 mt-1">
+                                    <input type="checkbox" name="check" value="{{projects.id}}" class="check_box" >
+                                </div>
+                                <div class="col-sm-5 mt-1">
+                                    {{projects.name}}
+                                </div>
+                                <div class="col-sm-5 mt-1 parnership">
+                                    <input type="number" placeholder="Partnership(in percentage)" name="partnership" class="form-control" class="percent" disabled="disabled" id={{projects.id}}>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                          
+                            
+                            <div class="text-center mt-5"><button type="submit" class="btn btn-primary"> SUBMIT</button></div>
+                            
+                      </form>
+
+                    
+                    </div>
+</form>
+
+            
+
+
+
+
+    
+</div>
+</div>
+</div>
+{% endblock %}
