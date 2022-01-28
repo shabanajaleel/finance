@@ -94,18 +94,8 @@ searchMobileTrigger.addEventListener('click', () => {
 });
 
 
-alert("hi")
-/* ====== form enable and disable based on checkbox checked in ======= */
-$(function () {
-	$("#check_box").click(function () {
-		if ($(this).is(":checked")) {
-			$("#percent").removeAttr("disabled");
-			$("#percent").focus();
-		} else {
-			$("#percent").attr("disabled", "disabled");
-		}
-	});
-});
+
+
 
 
 

@@ -4,7 +4,7 @@ from django.contrib import messages
 from .forms import partnerform, partnershipform, projectform,profitform
 from . models import partner, partnership, project,profit
 from django.core.paginator import Paginator
-from django.db.models import Sum
+from django.db.models import Sum,Count
 from django.db.models import Q
 
 # Create your views here.
@@ -157,50 +157,95 @@ def fnaddpartner(request):
         partnership_list=request.POST.getlist('partnership')
         newpartneship_list=[j for j in partnership_list if j]
         print(newpartneship_list)
-        if form1.is_valid():
-            p=form1.save()
-            
-            for z in range(0,len(newcheck_list)):
-                print(z)
-                print(newcheck_list[z])
-                print(newpartneship_list[z])
-                sum1=partnership.objects.filter(project=newcheck_list[z]).aggregate(mysum=Sum('partnership'))['mysum'] or 0.00
-                sum2=100-sum1
-                if int(newpartneship_list[z]) <= sum2: 
-                    newpart=partnership(project_id=newcheck_list[z],partner_id=p.id,partnership=newpartneship_list[z])
-                    newpart.save()
-                    messages.success(request,'partners added successfully')
-                    return redirect(fnaddpartner)
-                else:
-                    messages.error(request,'partnership exceeds 100')                    
+        p=partner.objects.filter(partner_name=partnername).exists()
+        if p == False:
+            if form1.is_valid():
+                p1=form1.save()
+                print(len(newcheck_list))
+                for z in range(0,len(newcheck_list)):
+                    print(z)
+                    print(newcheck_list[z])
+                    print(newpartneship_list[z])
+                    sum1=partnership.objects.filter(project=newcheck_list[z]).aggregate(mysum=Sum('partnership'))['mysum'] or 0.00
+                    sum2=100-sum1
+                    if int(newpartneship_list[z]) <= sum2: 
+                        newpart=partnership(project_id=newcheck_list[z],partner_id=p1.id,partnership=newpartneship_list[z])
+                        newpart.save()
+                messages.success(request,'partners added successfully')
+                return redirect(fnaddpartner)
+                       
+        else:
+            messages.success(request,'partners already exist')
+            return redirect(fnaddpartner)                    
     return render(request,'addpartnernew.html',context)
 
                             
-                        
+def fnstatement(request):
+    if request.method=="POST":
+        from_date=request.POST['from']
+        to_date=request.POST['to']
+        print(from_date)
+        print(to_date)
+        profit_interval=profit.objects.filter(created_date__gte=from_date,created_date__lte=to_date)
+        print(profit_interval)
+        profit_dict={}
+        profit_list=[]
+        for q in profit_interval:
+            newinterval=profit_interval.filter(project=q.project).aggregate(Sum('amount'))
+            profit_dict['project']=q.project.id
+            profit_dict['value']=newinterval['amount__sum']
+            profit_list.append(profit_dict.copy())
+        new_list=[i for n, i in enumerate(profit_list) if i not in profit_list[n + 1:]]
+        print(new_list)
+        for m in new_list:
+            # print(m)
+            sum_amount=[]
+            sum_dict={}
+            partnership_list=partnership.objects.filter(project=m['project'])
+            for h in partnership_list:
+                print(h.partnership)
+                percent=h.partnership
+                some=m['value']
+                calculate=(percent*some)/100
+                sum_dict['project']=h.project
+                sum_dict['partner']=h.partner
+                sum_dict['amount']=calculate
+                sum_amount.append(sum_dict.copy())
+            print(sum_amount)
             
-            # if part_obj==True:
-            #     p=partner.objects.get(partner_name=partnername) 
-            #     for i in check_list:
-            #         if i != '':
-            #             proj_obj=partnership.objects.filter(project=i,partner=p.id).exists()
-            #             if proj_obj==False:
-            #                 sum1=partnership.objects.filter(project=i).aggregate(mysum=Sum('partnership'))['mysum'] or 0.00
-            #                 sum2=100-sum1
-            #                 for j in partnership_list:
-            #                     if int(j) <= sum2:
-            #                         newpart=partnership(project_id=i,partner_id=p.id,partnership=j)
-            #                         newpart.save()
-            #                         messages.success(request,'partners added successfully')
-            #                         return redirect(fnaddpartner)
-            #                     else:
-            #                         messages.error(request,'Partnership exceeds 100')
-            #                         return redirect(fnaddpartner)
+            context={'amount':sum_amount}
+        return render(request,'statements.html',context)
+    return render(request,'statements.html')
 
-            #                 else:
-            #                     messages.error(request,'partner with selected project exists')
-            #                     return redirect(fnaddpartner)
-            #             else:
-                            
+
+
+
+
+
+            # partners=partner.objects.all()
+            # for i in partners:
+            #     partnership_list=i.partnership_set.all()
+            #     for j in partnership_list:
+            #         print(j.project)
+            #         if j.project == q.project:
+            #             part=partnership.objects.filter(project=j.project,partner=i.id)
+                       
+
+            
+        # projects=project.objects.all()
+        # for p in projects:
+        #     newinterval=profit_interval.filter(project=p.id).aggregate(Sum('amount'))
+        #     # print(newinterval)
+        #     partnership_table=partnership.objects.filter(project=p.id)
+        #     for i in partnership_table:
+        #         print(i.partner)
+                
+
+
+       
+       
+       
+   
                             
                    
 

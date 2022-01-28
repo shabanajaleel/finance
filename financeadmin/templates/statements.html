@@ -1,0 +1,55 @@
+{% extends 'includes/navbar.html' %}
+{% block content %}
+
+<div class="app-wrapper">
+	    
+    <div class="app-content pt-3 p-md-3 p-lg-4">
+        <div class="container-xl">
+<div class="col-sm-8 col-lg-9 container ">
+    <h3 class="text-center mt-5">Statements</h3>
+    <div class="row m-5 p-3 border bg-white">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                 <div class="col-sm-6 my-2">
+                <input type="date" placeholder="From Date" class="form-control" name="from">
+            </div>
+            <div class="col-sm-6 my-2">
+                <input type="date" placeholder="To Date" class="form-control" name="to">
+            </div>
+        </div>
+       
+        <center><button type="submit" class="btn btn-secondary mt-5">Search</button></center>
+    </form>
+
+    </div>
+{% if amount %}
+    <div class="row m-5 p-3 border bg-white">
+        <table class="table table-striped">
+            <tr>
+                <td>Partner</td>
+                <td>Project</td>
+                <td>Amount</td>
+            </tr>
+            {% for i in amount %}
+            <tr>
+                <td>{{i.partner}}</td>
+                <td>{{i.project}}</td>
+                <td>{{i.amount}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+   
+  
+  
+
+
+    
+
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

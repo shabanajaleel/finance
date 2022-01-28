@@ -15,4 +15,6 @@ urlpatterns=[
     path('addprofit/', views.fnaddprofit,name="addprofit"),
     path('viewprofit/', views.fnviewprofit,name="viewprofit"),
 
+    path('statements/',views.fnstatement,name="statements")
+
 ]

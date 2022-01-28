@@ -26,7 +26,7 @@ class partnership(models.Model):
         return str(self.partner)
 
 class profit(models.Model):
-    created_date=models.DateField()
+    created_date=models.CharField(max_length=30)
     project=models.ForeignKey(project,on_delete=models.CASCADE)
     amount=models.BigIntegerField()
 
