@@ -23,15 +23,15 @@
     </form>
 
     </div>
-{% if amount %}
+{% if data %}
     <div class="row m-5 p-3 border bg-white">
         <table class="table table-striped">
             <tr>
-                <td>Partner</td>
-                <td>Project</td>
-                <td>Amount</td>
+                <td><strong>Partner</strong> </td>
+                <td><strong>Project</strong>  </td>
+                <td><strong> Amount</strong></td>
             </tr>
-            {% for i in amount %}
+            {% for i in data %}
             <tr>
                 <td>{{i.partner}}</td>
                 <td>{{i.project}}</td>

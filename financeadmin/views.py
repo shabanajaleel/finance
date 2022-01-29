@@ -28,15 +28,18 @@ def fnlogout(request):
     return redirect(fnlogin)
 
 def fnaddproject(request):
+    form=projectform()
+    context={"form" : form}
     if request.method=="POST":
         form=projectform(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request,"Project added successfilly")
+            return render(request,'addproject.html',context)
         else:
             messages.error(request,"OOps,something went wrong")
 
-    form=projectform()
-    context={"form" : form}
+    
     return render(request,'addproject.html',context)
 
 def fnviewproject(request):
@@ -197,24 +200,69 @@ def fnstatement(request):
             profit_list.append(profit_dict.copy())
         new_list=[i for n, i in enumerate(profit_list) if i not in profit_list[n + 1:]]
         print(new_list)
-        for m in new_list:
-            # print(m)
-            sum_amount=[]
-            sum_dict={}
-            partnership_list=partnership.objects.filter(project=m['project'])
-            for h in partnership_list:
-                print(h.partnership)
-                percent=h.partnership
-                some=m['value']
-                calculate=(percent*some)/100
-                sum_dict['project']=h.project
-                sum_dict['partner']=h.partner
-                sum_dict['amount']=calculate
-                sum_amount.append(sum_dict.copy())
-            print(sum_amount)
+        partners=partner.objects.all()
+        partner_list=[]
+        for partner1 in partners:
+            projects=partner1.partnership_set.all()
+            project_list=[]
+            for p in projects:
+                project_dic={}
+                for m in new_list:
+                    if m['project'] == p.project_id:
+                        percent=p.partnership
+                        some=m['value']
+                        calculate=(percent*some)/100
+                        project_dic['partner']=p.partner
+                        project_dic['project']=p.project
+                        project_dic['amount']=calculate
+                project_list.append(project_dic.copy())
+            partner_list.extend(project_list)
+            new_partner_list=[i for i in partner_list if i]
+
+        print(new_partner_list)
+        return render(request,'statements.html',{'data':new_partner_list})
+
+
+                    
+
+
+                
+                        # print(p.project)
+            # for profits in profit_interval:
+            #     if projects.project == profits.project:
+            #         newinterval=profits.filter(project=profits.project).aggregate(Sum('amount'))
+            #         print(newinterval)
+
+
+
+
+        # profit_dict={}
+        # profit_list=[]
+        # for q in profit_interval:
+        #     newinterval=profit_interval.filter(project=q.project).aggregate(Sum('amount'))
+        #     profit_dict['project']=q.project.id
+        #     profit_dict['value']=newinterval['amount__sum']
+        #     profit_list.append(profit_dict.copy())
+        # new_list=[i for n, i in enumerate(profit_list) if i not in profit_list[n + 1:]]
+        # print(new_list)
+        # for m in new_list:
+        #     # print(m)
+        #     sum_amount=[]
+        #     sum_dict={}
+        #     partnership_list=partnership.objects.filter(project=m['project'])
+        #     for h in partnership_list:
+        #         print(h.partnership)
+        #         percent=h.partnership
+        #         some=m['value']
+        #         calculate=(percent*some)/100
+        #         sum_dict['project']=h.project
+        #         sum_dict['partner']=h.partner
+        #         sum_dict['amount']=calculate
+        #         sum_amount.append(sum_dict.copy())
+        #     print(sum_amount)
             
-            context={'amount':sum_amount}
-        return render(request,'statements.html',context)
+        #     context={'amount':sum_amount}
+        # return render(request,'statements.html',context)
     return render(request,'statements.html')
 
 
