@@ -32,3 +32,12 @@ class profit(models.Model):
 
     def __str__(self):
         return str(self.project)
+
+class Partnerpayment(models.Model):
+    payment=models.ForeignKey(profit,on_delete=models.CASCADE)
+    partner=partner=models.ForeignKey(partner,on_delete=models.CASCADE)
+    amount=models.BigIntegerField()
+    created_date=models.CharField(max_length=30)
+
+    def __str__(self):
+        return str(self.partner)

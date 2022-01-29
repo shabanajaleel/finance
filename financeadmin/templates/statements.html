@@ -28,13 +28,11 @@
         <table class="table table-striped">
             <tr>
                 <td><strong>Partner</strong> </td>
-                <td><strong>Project</strong>  </td>
                 <td><strong> Amount</strong></td>
             </tr>
             {% for i in data %}
             <tr>
                 <td>{{i.partner}}</td>
-                <td>{{i.project}}</td>
                 <td>{{i.amount}}</td>
             </tr>
             {% endfor %}
