@@ -63,6 +63,7 @@ def fnviewproject(request):
     context={'page':page_obj,'sum_list':sum_list}
     return render(request,"viewproject.html",context)
 
+# Add Profit
 
 @login_required(login_url="/login/")
 def fnaddprofit(request):
@@ -89,12 +90,39 @@ def fnaddprofit(request):
     context={'form':form}
     return render(request,'addprofit.html',context)
 
+# view Profit
 
 @login_required(login_url="/login/")
 def fnviewprofit(request):
-    profits=profit.objects.all()
+    profits=profit.objects.filter(amount__gt=0)
     context={'profits':profits}
     return render(request,'viewprofit.html',context)
+
+# Delete Profit
+
+def fndeleteprofit(request,prof_id):
+    profits=profit.objects.get(id=prof_id)
+    profits.amount -= profits.amount
+    profits.save()
+    payment_id=profits.id
+    project_id=profits.project_id
+    partners=partnership.objects.filter(project=project_id)
+    for i in partners:
+        percent=i.partnership
+        newamount=(percent * profits.amount)/100
+        print(newamount)
+        payment=Partnerpayment.objects.filter(payment_id=payment_id)
+        for k in payment:
+            k.amount=newamount
+            k.save()
+    messages.success(request,'profit deleted successfully')
+    return redirect(fnviewprofit)
+    
+
+
+
+
+
 
 @login_required(login_url="/login/")
 def fnviewpartner(request):
@@ -152,19 +180,29 @@ def fnstatement(request):
     if request.method=="POST":
         from_date=request.POST['from']
         to_date=request.POST['to']
-        print(from_date)
-        print(to_date)
-        profit_interval=Partnerpayment.objects.filter(created_date__gte=from_date,created_date__lte=to_date)
+        opening=Partnerpayment.objects.filter(created_date__lt=from_date)
         partners=partner.objects.filter()
+        opening_list=[]
+        opening_dict={}
+        for q in partners:
+            profit=opening.filter(partner_id=q.id).aggregate(Sum('amount'))
+            opening_dict['partner']=q.partner_name
+            opening_dict['amount']=profit['amount__sum']
+            opening_list.append(opening_dict.copy())
+        print(opening_list)
+
+        profit_interval=Partnerpayment.objects.filter(created_date__gte=from_date,created_date__lte=to_date)
         partner_list=[]
         partner_dict={}
+        sum=0
         for p in partners:
             profit=profit_interval.filter(partner_id=p.id).aggregate(Sum('amount'))
             partner_dict['partner']=p.partner_name
             partner_dict['amount']=profit['amount__sum']
             partner_list.append(partner_dict.copy())
+            sum += profit['amount__sum']
         print(partner_list)
-        return render(request,'statements.html',{'data':partner_list})
+        return render(request,'statements.html',{'data':partner_list,'opening':opening_list,'total':sum})
 
     return render(request,'statements.html')
 

@@ -14,12 +14,14 @@
                 <th>Date</th>
                 <th>Project</th>
                 <th>Amount</th>
+                <th></th>
             </tr>
             {% for profit in profits %} 
             <tr>
                 <td>{{profit.created_date}}</td>
                 <td>{{profit.project}}</td>
                 <td>{{profit.amount}}Rs</td>
+                <td><a href="{% url 'profitdelete' prof_id=profit.id %}" class="btn btn-danger">Delete</a></td>
             </tr>
             {% endfor %}
            

@@ -6,7 +6,7 @@
     <div class="app-content pt-3 p-md-3 p-lg-4">
         <div class="container-xl">
 <div class="col-sm-8 col-lg-9 container ">
-    <h3 class="text-center mt-5">Statements</h3>
+    <h3 class="text-center mt-5 text-primary">Statements</h3>
     <div class="row m-5 p-3 border bg-white">
         <form action="" method="POST">
             {% csrf_token %}
@@ -23,8 +23,29 @@
     </form>
 
     </div>
+    <!-- opening balance -->
+    {% if opening %}
+    <div class="row m-5 p-3 border bg-white">
+        <center><h3 class="text-primary mb-2">Opening Balance</h3></center>
+        <table class="table table-striped">
+            <tr>
+                <td><strong>Partner</strong> </td>
+                <td><strong> Amount</strong></td>
+            </tr>
+            {% for j in opening %}
+            <tr>
+                <td>{{j.partner}}</td>
+                <td>{{j.amount}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+<!-- statement -->
 {% if data %}
     <div class="row m-5 p-3 border bg-white">
+        <center><h3 class="text-primary mb-2">Statement for financial year</h3></center>
         <table class="table table-striped">
             <tr>
                 <td><strong>Partner</strong> </td>
@@ -34,8 +55,17 @@
             <tr>
                 <td>{{i.partner}}</td>
                 <td>{{i.amount}}</td>
+
             </tr>
             {% endfor %}
+
+            
+            <tr>
+                <td></td>
+                <td><strong>Total:{{total}}</strong>  </td>
+                
+            </tr>
+            
         </table>
     </div>
     {% endif %}

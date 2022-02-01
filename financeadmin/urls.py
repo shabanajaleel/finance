@@ -14,6 +14,8 @@ urlpatterns=[
 
     path('addprofit/', views.fnaddprofit,name="addprofit"),
     path('viewprofit/', views.fnviewprofit,name="viewprofit"),
+    path('profitdelete/<prof_id>', views.fndeleteprofit,name="profitdelete"),
+
 
     path('statements/',views.fnstatement,name="statements")
 
